@@ -1,43 +1,52 @@
 package com.example.config;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Map;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.mock.web.MockHttpServletResponse;
-import org.springframework.security.web.FilterChainProxy;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.web.context.WebApplicationContext;
+import org.springframework.mock.web.MockHttpServletRequest;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.oauth2.common.OAuth2AccessToken;
+import org.springframework.security.oauth2.provider.ClientDetails;
+import org.springframework.security.oauth2.provider.ClientDetailsService;
+import org.springframework.security.oauth2.provider.OAuth2Authentication;
+import org.springframework.security.oauth2.provider.OAuth2Request;
+import org.springframework.security.oauth2.provider.token.AuthorizationServerTokenServices;
+import org.springframework.stereotype.Component;
+import org.springframework.test.web.servlet.request.RequestPostProcessor;
 
-import com.example.test.security.OAuthTokenResponse;
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
+@Component
 public class OAuthHelper {
-		    
-	    private MockMvc mvc;
-	    
-	    
-	    public OAuthHelper(MockMvc mvc){
-	    	this.mvc = mvc;
-	    }
-	    
-	    
-	    public OAuthTokenResponse getAccessToken(String username, String password, String clientId) throws Exception {    
-	        MockHttpServletResponse response = mvc
-	                .perform(post("/oauth/token")
-	                        .param("username", username)
-	                        .param("password", password)
-	                        .param("grant_type", "password")
-	                		.param("client_id", clientId))
-	                .andReturn().getResponse();
+	
+    @Autowired
+    AuthorizationServerTokenServices tokenservice;
+	
+    // For use with MockMvc
+    public RequestPostProcessor bearerToken(final OAuth2Request clientRequest, final User user) {
+    	RequestPostProcessor requestPostProcessor = new RequestPostProcessor() {
+			@Override
+			public MockHttpServletRequest postProcessRequest(MockHttpServletRequest mockRequest) {
+				OAuth2AccessToken token = createAccessToken(clientRequest, user);
+	            mockRequest.addHeader("Authorization", "Bearer " + token.getValue());
+	            return mockRequest;
+			}
+		};
+		return requestPostProcessor;
+    }
 
-	        ObjectMapper object = new ObjectMapper(); 
-	        object.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-	        OAuthTokenResponse oauthTokenResponse =  object.readValue(
-	        		response.getContentAsByteArray(), 
-	        		OAuthTokenResponse.class);
-	        return oauthTokenResponse;
-	    }
 
+    OAuth2AccessToken createAccessToken(final OAuth2Request clientRequest, final User user) {
+        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
+        OAuth2Authentication auth = new OAuth2Authentication(clientRequest, authenticationToken);
+        
+        return tokenservice.createAccessToken(auth);
+    }    
 }
