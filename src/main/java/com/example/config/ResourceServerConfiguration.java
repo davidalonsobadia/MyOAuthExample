@@ -3,30 +3,15 @@ package com.example.config;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.access.AccessDecisionManager;
-import org.springframework.security.access.expression.SecurityExpressionHandler;
-import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.ResourceServerConfigurerAdapter;
-import org.springframework.security.web.FilterInvocation;
-import org.springframework.security.web.access.expression.DefaultWebSecurityExpressionHandler;
 
 import com.example.model.Role;
-import com.example.security.CustomAuthenticationEntryPoint;
-import com.example.security.CustomLogoutSuccessHandler;
 
 @Configuration
 @EnableResourceServer
 public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter {
-
-    @Autowired
-    private CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
-
-    @Autowired
-    private CustomLogoutSuccessHandler customLogoutSuccessHandler;
-    
-    @Autowired
-    private RoleHierarchy roleHierarchy;
     
     @Autowired
     private AccessDecisionManager accessDecisionManager;

@@ -23,8 +23,6 @@ import org.springframework.test.web.servlet.request.RequestPostProcessor;
 
 import com.example.model.User;
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 
 @RunWith(SpringJUnit4ClassRunner.class)

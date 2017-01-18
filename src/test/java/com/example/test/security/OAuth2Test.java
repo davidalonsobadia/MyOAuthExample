@@ -94,7 +94,7 @@ public class OAuth2Test {
 	 */
 	@Test(expected=JsonMappingException.class)
 	public void Should_getErrorMessage_When_MissingClientId() throws Exception{
-		OAuthTokenResponse tokenResponse = getAccessToken("alonso_50", "123456", null);
+		getAccessToken("alonso_50", "123456", null);
     	
 	}
     
