@@ -12,9 +12,14 @@ public interface UserRepository extends CrudRepository<User, Long> {
 	@PreAuthorize("hasRole('ADMIN')")
 	User findByUsername(@Param("username") String username);
 	
+	
 	@PostFilter("hasRole('ADMIN') or "
 			+ "filterObject.getUsername() == principal.getUsername()")
 	@Override
 	Iterable<User> findAll();
+	
+	@PreAuthorize("hasRole('ADMIN')")
+	@Override
+	<S extends User> S save(S entity);
 	
 }

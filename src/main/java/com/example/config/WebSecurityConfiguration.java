@@ -4,6 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.access.expression.SecurityExpressionOperations;
+import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
+import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -14,15 +16,17 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.provider.expression.OAuth2WebSecurityExpressionHandler;
 import org.springframework.security.web.FilterInvocation;
 import org.springframework.security.web.access.expression.DefaultWebSecurityExpressionHandler;
 import org.springframework.security.web.access.expression.WebSecurityExpressionRoot;
 
+import com.example.model.Role;
+
 
 @Configuration
 @EnableWebSecurity
-@EnableGlobalMethodSecurity(prePostEnabled=true)
-public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
+public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Autowired
     private UserDetailsService userDetailsService;
@@ -43,24 +47,15 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Override
     public void configure(WebSecurity web) throws Exception {
-    	
-//    	web.expressionHandler(new DefaultWebSecurityExpressionHandler() {
-//            @Override
-//            protected SecurityExpressionOperations createSecurityExpressionRoot(Authentication authentication, FilterInvocation fi) {
-//                WebSecurityExpressionRoot root = (WebSecurityExpressionRoot) super.createSecurityExpressionRoot(authentication, fi);
-//                root.setDefaultRolePrefix(""); //remove the prefix ROLE_
-//                return root;
-//            }
-//        });
 
-//        web
-//                .ignoring()
-//                .antMatchers("/h2console/**")
-//                .antMatchers("/api/register")
-//                .antMatchers("/api/activate")
-//                .antMatchers("/api/lostpassword")
-//                .antMatchers("/api/resetpassword")
-//                .antMatchers("/api/hello");
+        web
+                .ignoring()
+                .antMatchers("/h2console/**")
+                .antMatchers("/api/register")
+                .antMatchers("/api/activate")
+                .antMatchers("/api/lostpassword")
+                .antMatchers("/api/resetpassword")
+                .antMatchers("/api/hello");
     }
     
 
