@@ -84,6 +84,11 @@ public class ApplicationRunnerImpl implements ApplicationRunner{
 		
 		Collection<GrantedAuthority> authorities = new ArrayList<>();
 		
+//		Role[] roles = Role.values();
+//		for(Role role: roles){
+//			authorities.add(new SimpleGrantedAuthority(role.getRoleName()));
+//		}
+		
 		authorities.add(new SimpleGrantedAuthority(Role.SUPERADMIN.getRoleName()));
 		
 		org.springframework.security.core.userdetails.User springUser = new org.springframework.security.core.userdetails.User(

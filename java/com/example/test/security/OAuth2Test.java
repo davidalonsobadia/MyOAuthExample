@@ -27,10 +27,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @SpringBootTest
 @WebAppConfiguration
 public class OAuth2Test {
-	
-    public static final String CLIENT_ID = "davidapp";
-    public static final String ADMIN_NAME = "alonso_50";
-    public static final String ADMIN_PASSWORD = "123456";
 
     @Autowired
     private WebApplicationContext context;
@@ -51,7 +47,7 @@ public class OAuth2Test {
 	 */
     @Test
 	public void Should_getValidTokens_When_ValidCredentials() throws Exception{
-    	OAuthTokenResponse tokenResponse = getAccessToken(ADMIN_NAME, ADMIN_PASSWORD, CLIENT_ID);
+    	OAuthTokenResponse tokenResponse = getAccessToken("alonso_50", "123456", "security_awareness_app");
     	
     	assertNotNull(tokenResponse.accessToken);
     	assertNotNull(tokenResponse.refreshToken);
@@ -66,7 +62,7 @@ public class OAuth2Test {
 	 */
 	@Test
 	public void Should_getInvalidCredentialsMessage_When_InvalidCredentials() throws Exception{
-		OAuthTokenResponse tokenResponse = getAccessToken(ADMIN_NAME, "wrongPassword", CLIENT_ID);
+		OAuthTokenResponse tokenResponse = getAccessToken("alonso_50", "wrongPassword", "security_awareness_app");
     	
     	assertNull(tokenResponse.accessToken);
     	assertNull(tokenResponse.refreshToken);
@@ -83,7 +79,7 @@ public class OAuth2Test {
 	 */
 	@Test
 	public void Should_getInvalidCredentialsMessage_When_InvalidClientId() throws Exception{
-		OAuthTokenResponse tokenResponse = getAccessToken(ADMIN_NAME, ADMIN_PASSWORD, "wrongClientId");
+		OAuthTokenResponse tokenResponse = getAccessToken("alonso_50", "123456", "worngClientId");
     	
     	assertNull(tokenResponse.accessToken);
     	assertNull(tokenResponse.refreshToken);
@@ -99,7 +95,7 @@ public class OAuth2Test {
 	 */
 	@Test(expected=JsonMappingException.class)
 	public void Should_getErrorMessage_When_MissingClientId() throws Exception{
-		getAccessToken(ADMIN_NAME, ADMIN_PASSWORD, null);
+		getAccessToken("alonso_50", "123456", null);
     	
 	}
     

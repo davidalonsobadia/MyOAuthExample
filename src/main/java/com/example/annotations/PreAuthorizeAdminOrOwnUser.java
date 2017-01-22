@@ -13,7 +13,8 @@ import org.springframework.security.access.prepost.PreAuthorize;
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 @Inherited
-@PreAuthorize("hasRole('ROLE_ADMIN')")
-public @interface PreAuthorizeAdmin {
+@PreAuthorize("hasRole('ROLE_ADMIN') or "
+		+ "principal.username == #user.username")
+public @interface PreAuthorizeAdminOrOwnUser {
 
 }
